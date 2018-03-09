@@ -225,12 +225,18 @@ int main(int argc, char *argv[])
 		}else{
 			fprintf(stderr, "\nUse 'mosquitto_sub --help' to see usage.\n");
 		}
+#ifdef _DEBUG
+		system("pause");
+#endif
 		return 1;
 	}
 
 	mosquitto_lib_init();
 
 	if(client_id_generate(&cfg, "mosqsub")){
+#ifdef _DEBUG
+		system("pause");
+#endif
 		return 1;
 	}
 
@@ -245,9 +251,15 @@ int main(int argc, char *argv[])
 				break;
 		}
 		mosquitto_lib_cleanup();
+#ifdef _DEBUG
+		system("pause");
+#endif
 		return 1;
 	}
 	if(client_opts_set(mosq, &cfg)){
+#ifdef _DEBUG
+		system("pause");
+#endif
 		return 1;
 	}
 	if(cfg.debug){
@@ -258,8 +270,12 @@ int main(int argc, char *argv[])
 	mosquitto_message_callback_set(mosq, my_message_callback);
 
 	rc = client_connect(mosq, &cfg);
-	if(rc) return rc;
-
+	if(rc) {
+#ifdef _DEBUG
+		system("pause");
+#endif
+		return rc;
+	}
 
 	rc = mosquitto_loop_forever(mosq, -1, 1);
 
@@ -272,6 +288,10 @@ int main(int argc, char *argv[])
 	if(rc){
 		fprintf(stderr, "Error: %s\n", mosquitto_strerror(rc));
 	}
+#ifdef _DEBUG
+	system("pause");
+#endif
+
 	return rc;
 }
 

@@ -163,5 +163,11 @@ int _mosquitto_verify_certificate_hostname(X509 *cert, const char *hostname)
 	return 0;
 }
 
+int _mosquitto_server_certificate_ignore(int preverify_ok, X509_STORE_CTX *ctx)
+{
+	// Always authenticate
+	return 1;
+}
+
 #endif
 

@@ -570,7 +570,13 @@ int _mosquitto_socket_connect_step3(struct mosquitto *mosq, const char *host, ui
 			if(mosq->tls_cert_reqs == 0){
 				SSL_CTX_set_verify(mosq->ssl_ctx, SSL_VERIFY_NONE, NULL);
 			}else{
-				SSL_CTX_set_verify(mosq->ssl_ctx, SSL_VERIFY_PEER, _mosquitto_server_certificate_verify);
+				if(mosq->tls_insecure){
+					// Always authenticate even if the Common Name is incorrect.
+					SSL_CTX_set_verify(mosq->ssl_ctx, SSL_VERIFY_PEER, _mosquitto_server_certificate_ignore);
+				}
+				else{
+					SSL_CTX_set_verify(mosq->ssl_ctx, SSL_VERIFY_PEER, _mosquitto_server_certificate_verify);
+				}
 			}
 
 			if(mosq->tls_pw_callback){
